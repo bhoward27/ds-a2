@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+page_rank
+page_rank_parallel
+triangle_counting
+triangle_counting_parallel
