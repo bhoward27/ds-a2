@@ -330,9 +330,9 @@ void triangleCountParallelStrat2(Graph &g, uint num_threads)
 
 uintV get_next_vertex(uintV n)
 {
-    static atomic<uintV> next_vertex(0);
+    static atomic<uintV> next_vertex(-1);
 
-    if (next_vertex > n || next_vertex < 0) return -1;
+    if (next_vertex >= n - 1 || next_vertex < -1) return -1;
 
     uintV expected = next_vertex;
     uintV desired;
@@ -340,7 +340,7 @@ uintV get_next_vertex(uintV n)
         desired = expected + 1;
     } while(!next_vertex.compare_exchange_weak(expected, desired));
 
-    return next_vertex;
+    return desired;
 }
 
 void threadStrat3(Graph& g,
@@ -460,8 +460,7 @@ int main(int argc, char *argv[])
                      cxxopts::value<uint>()->default_value(DEFAULT_STRATEGY)},
                     {"inputFile", "Input graph file path",
                      cxxopts::value<std::string>()->default_value(
-                    // TODO: Add back in         "/scratch/input_graphs/roadNet-CA")},
-                    "/home/ben/Documents/SFU/cmpt-431/assignments/1/default_page_rank_graph/roadNet-CA")},
+                    "/scratch/input_graphs/roadNet-CA")},
             });
 
     auto cl_options = options.parse(argc, argv);
