@@ -236,7 +236,7 @@ void threadStrat2(Graph& g,
 int min(const vector<ThreadDistribution>& distros)
 {
     // first = thread number who has min number of edges
-    // sedond = min number of edges.
+    // second = min number of edges.
     pair<int, long> min_edges = {0, LONG_MAX};
     for (unsigned long t = 0; t < distros.size(); t++) {
         if (distros[t].num_edges < min_edges.second) {
@@ -276,18 +276,10 @@ void triangleCountParallelStrat2(Graph &g, uint num_threads)
     // hopefully it's good enough for our purposes.
 
     vector<ThreadDistribution> thread_distros(num_threads, ThreadDistribution());
-    // Assume cache block size is 64 bytes.
-    // const int num_elems_per_block = 4 * 64 / sizeof(uintV);
-    for (uintV v = 0; v < n; /* v += num_elems_per_block*/ v++) {
+    for (uintV v = 0; v < n; v++) {
         int min_thread = min(thread_distros);
-        // Assign the next two cache block's worth of vertices to min_thread to attempt to maintain a stride-1 access pattern
-        // later in the program.
-        // for (uintV u = v; (u < n) && (u < v + num_elems_per_block); u++) {
-            // thread_distros[min_thread].vertices.push_back(u);
-            // thread_distros[min_thread].num_edges += degrees[u];
-        // }
-            thread_distros[min_thread].vertices.push_back(v);
-            thread_distros[min_thread].num_edges += degrees[v];
+        thread_distros[min_thread].vertices.push_back(v);
+        thread_distros[min_thread].num_edges += degrees[v];
     }
     double partitioning_time = t2.stop();
 
