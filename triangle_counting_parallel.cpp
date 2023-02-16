@@ -360,11 +360,7 @@ void threadStrat3(Graph& g,
     while (true) {
         // For each outNeighbor v, find the intersection of inNeighbor(u) and
         // outNeighbor(v)
-        // NOTE: I consider this as part of the "partitioning" time. Wasn't too sure if that applies in dynamic task scenario,
-        // so doing this just in case it does.
-        // if (tid == 0) t2.start();
         uintV u = get_next_vertex(g.n_);
-        // if (tid == 0) partitioning_time += t2.stop();
         if (u == -1) break;
         uintE out_degree = g.vertices_[u].getOutDegree();
         num_edges += out_degree;
@@ -386,8 +382,6 @@ void threadStrat3(Graph& g,
     do {
         desired = expected + local_triangle_count;
     } while(!global_triangle_count.compare_exchange_weak(expected, desired));
-
-    // if (tid == 0) global_partitioning_time = partitioning_time;
 
     Result res = {local_triangle_count, num_vertices, num_edges, t.stop()};
     thread_results[tid] = res;
@@ -441,7 +435,7 @@ void triangleCountParallelStrat3(Graph &g, uint num_threads)
     // Print the overall statistics
     std::cout << "Number of triangles : " << triangle_count << "\n";
     std::cout << "Number of unique triangles : " << triangle_count / 3 << "\n";
-    std::cout << "Partitioning time (in seconds) : " << std::setprecision(TIME_PRECISION) << partitioning_time << "\n";
+    std::cout << "Partitioning time (in seconds) : " << partitioning_time << "\n";
     std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION) << time_taken << "\n";
 }
 
