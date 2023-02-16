@@ -334,7 +334,13 @@ uintV get_next_vertex(uintV n)
 
     if (next_vertex > n || next_vertex < 0) return -1;
 
-    return next_vertex++;
+    uintV expected = next_vertex;
+    uintV desired;
+    do {
+        desired = expected + 1;
+    } while(!next_vertex.compare_exchange_weak(expected, desired));
+
+    return next_vertex;
 }
 
 void threadStrat3(Graph& g,
