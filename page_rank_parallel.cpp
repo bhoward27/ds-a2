@@ -349,7 +349,7 @@ void pageRankParallelStrat2(Graph &g, int max_iters, int num_threads) {
 
 uintV get_next_vertex(atomic<uintV>& next_vertex, uintV n, uintV k)
 {
-    if (next_vertex >= n - 1 || next_vertex < -k) return -1;
+    if (next_vertex >= n || next_vertex < -k) return -1;
 
     uintV expected = next_vertex;
     uintV desired;
@@ -357,7 +357,7 @@ uintV get_next_vertex(atomic<uintV>& next_vertex, uintV n, uintV k)
         desired = expected + k;
     } while(!next_vertex.compare_exchange_weak(expected, desired));
 
-    if (desired >= n - 1) return -1;
+    if (desired >= n) return -1;
 
     return desired;
 }
@@ -390,8 +390,10 @@ void threadStrat3(int tid,
             get_next_vertex_timer.start();
             uintV u = get_next_vertex(next_vertex_first, g.n_, k);
             get_next_vertex_time += get_next_vertex_timer.stop();
-            if (u == -1) break;
-            for (int i = 0; i < k && ((g.n_ % k == 0) ? u < g.n_ : u < g.n_ -1); i++, u++) {
+            if (u == -1) {
+                break;
+            }
+            for (uintV i = 0; i < k && u < g.n_; i++, u++) {
                 uintE out_degree = g.vertices_[u].getOutDegree();
                 for (uintE i = 0; i < out_degree; i++) {
                     uintV v = g.vertices_[u].getOutNeighbor(i);
@@ -414,7 +416,7 @@ void threadStrat3(int tid,
             if (v == -1) {
                 break;
             }
-            for (int i = 0; i < k && ((g.n_ % k == 0) ? v < g.n_ : v < g.n_ -1); i++, v++) {
+            for (uintV i = 0; i < k && v < g.n_; i++, v++) {
                 // No lock needed here, since v is only from this thread's subset of vertices.
                 pr_next[v] = PAGE_RANK(pr_next[v]);
                 pr_curr[v] = pr_next[v];
