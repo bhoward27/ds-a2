@@ -190,7 +190,6 @@ void triangleCountParallelStrat1(Graph &g, uint num_threads)
     std::cout << "Time taken (in seconds) : " << std::setprecision(TIME_PRECISION) << time_taken << "\n";
 }
 
-// TODO: Write this function to use strategy 2.
 void threadStrat2(Graph& g,
                  const vector<long>& degrees,
                  const ThreadDistribution& thread_distro,
@@ -246,7 +245,6 @@ int min(const vector<ThreadDistribution>& distros)
     return min_edges.first;
 }
 
-// TODO: Write this function to use strategy 2.
 void triangleCountParallelStrat2(Graph &g, uint num_threads)
 {
     uintV n = g.n_;
