@@ -322,13 +322,15 @@ uintV get_next_vertex(uintV n)
 {
     static atomic<uintV> next_vertex(-1);
 
-    if (next_vertex >= n - 1 || next_vertex < -1) return -1;
+    if (next_vertex >= n || next_vertex < -1) return -1;
 
     uintV expected = next_vertex;
     uintV desired;
     do {
         desired = expected + 1;
     } while(!next_vertex.compare_exchange_weak(expected, desired));
+
+    if (desired >= n) return -1;
 
     return desired;
 }

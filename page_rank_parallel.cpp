@@ -239,7 +239,7 @@ void threadStrat2(int tid,
 {
     timer barrier1_timer, barrier2_timer, total_timer;
     double barrier1_time = 0;
-    double barrier2_time =0;
+    double barrier2_time = 0;
     total_timer.start();
     for (int iter = 0; iter < max_iters; iter++) {
         for (uintV u : thread_distro.vertices) {
@@ -521,8 +521,7 @@ int main(int argc, char *argv[]) {
                      cxxopts::value<uint>()->default_value(DEFAULT_GRANULARITY)},
                     {"inputFile", "Input graph file path",
                      cxxopts::value<std::string>()->default_value(
-                    // TODO: Add back in         "/scratch/input_graphs/roadNet-CA")},
-                    "/home/ben/Documents/SFU/cmpt-431/assignments/1/default_page_rank_graph/roadNet-CA")},
+                    "/scratch/input_graphs/roadNet-CA")},
             });
 
     auto cl_options = options.parse(argc, argv);
